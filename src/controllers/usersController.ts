@@ -1,5 +1,3 @@
-// src/controllers/usersController.ts
-
 import { Request, Response } from 'express';
 import { wrapErrorResponse, wrapResponse } from '../utils/responseHandler';
 import { AuthenticatedRequest } from '../middlewares/auth';
@@ -18,6 +16,7 @@ export class UsersController {
     this.loginUser = this.loginUser.bind(this);
     this.updateUserRole = this.updateUserRole.bind(this);
     this.getCurrentUser = this.getCurrentUser.bind(this);
+    this.getAllUsers = this.getAllUsers.bind(this);
   }
 
   async registerUser(req: Request, res: Response): Promise<void> {
@@ -72,6 +71,20 @@ export class UsersController {
       }
     } catch (error) {
       console.error('Error fetching current user:', error);
+      if (error instanceof Error) {
+        wrapErrorResponse(res, 500, error.message);
+      } else {
+        wrapErrorResponse(res, 500, 'Internal server error');
+      }
+    }
+  }
+
+  async getAllUsers(req: Request, res: Response): Promise<void> {
+    try {
+      const users = await this.usersService.getAllUsers();
+      wrapResponse(res, 200, 'Users fetched successfully', users);
+    } catch (error) {
+      console.error('Error fetching all users:', error);
       if (error instanceof Error) {
         wrapErrorResponse(res, 500, error.message);
       } else {

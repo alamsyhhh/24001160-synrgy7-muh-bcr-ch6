@@ -13,6 +13,13 @@ router.post('/login', upload.none(), usersController.loginUser);
 
 router.get('/current-user', authenticateToken, usersController.getCurrentUser);
 
+router.get(
+  '/users',
+  authenticateToken,
+  authorizeRoles('3'),
+  usersController.getAllUsers
+);
+
 // Menggunakan path parameter (:userId)
 router.put(
   '/users/:userId/role',

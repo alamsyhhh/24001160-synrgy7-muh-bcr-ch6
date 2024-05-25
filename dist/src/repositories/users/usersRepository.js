@@ -1,5 +1,4 @@
 "use strict";
-// src/repositories/usersRepository.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersRepository = void 0;
 const usersModel_1 = require("../../db/models/usersModel");
-const tokensModel_1 = require("../../db/models/tokensModel");
+const rolesModel_1 = require("../../db/models/rolesModel");
 class UsersRepository {
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -29,9 +28,15 @@ class UsersRepository {
             return usersModel_1.UsersModel.query().insert(user);
         });
     }
-    insertToken(token) {
+    findAllUsersWithRoles() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield tokensModel_1.TokensModel.query().insert(token);
+            const users = yield usersModel_1.UsersModel.query();
+            const usersWithRoles = yield Promise.all(users.map((user) => __awaiter(this, void 0, void 0, function* () {
+                var _a;
+                const role = yield rolesModel_1.RolesModel.query().findById(user.roleId);
+                return Object.assign(Object.assign({}, user), { role: { userRole: (_a = role === null || role === void 0 ? void 0 : role.userRole) !== null && _a !== void 0 ? _a : '' } });
+            })));
+            return usersWithRoles;
         });
     }
     updateUserRole(userId, newRoleId) {

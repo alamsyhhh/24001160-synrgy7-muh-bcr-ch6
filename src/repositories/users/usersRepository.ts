@@ -1,8 +1,7 @@
-// src/repositories/usersRepository.ts
-
 import { IUsersRepository } from './usersRepositoryInterface';
 import { UsersModel } from '../../db/models/usersModel';
-import { TokensModel } from '../../db/models/tokensModel';
+import { UserCurrentDto } from '../../dto/users/usersCurrentDto';
+import { RolesModel } from '../../db/models/rolesModel';
 
 export class UsersRepository implements IUsersRepository {
   async findById(id: string): Promise<UsersModel | undefined> {
@@ -17,8 +16,17 @@ export class UsersRepository implements IUsersRepository {
     return UsersModel.query().insert(user);
   }
 
-  async insertToken(token: Partial<TokensModel>): Promise<void> {
-    await TokensModel.query().insert(token);
+  async findAllUsersWithRoles(): Promise<
+    (UsersModel & { role?: { userRole: string } | undefined })[]
+  > {
+    const users = await UsersModel.query();
+    const usersWithRoles = await Promise.all(
+      users.map(async (user: any) => {
+        const role = await RolesModel.query().findById(user.roleId);
+        return { ...user, role: { userRole: role?.userRole ?? '' } };
+      })
+    );
+    return usersWithRoles;
   }
 
   async updateUserRole(userId: string, newRoleId: string): Promise<UsersModel> {

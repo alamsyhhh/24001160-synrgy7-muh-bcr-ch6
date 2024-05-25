@@ -1,5 +1,3 @@
-// src/services/users/usersService.ts
-
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { ValidationError } from 'objection';
@@ -72,11 +70,6 @@ export class UsersService implements IUsersService {
     }
 
     const token = generateToken(user.id);
-    await this.usersRepository.insertToken({
-      id: uuidv4(),
-      token,
-      userId: user.id,
-    });
 
     return { user: new UserDto(user.username), token };
   }
@@ -94,6 +87,17 @@ export class UsersService implements IUsersService {
     const role = await RolesModel.query().findById(user.roleId);
 
     return new UserCurrentDto(user.id, user.username, role?.userRole ?? '');
+  }
+
+  async getAllUsers(): Promise<UserCurrentDto[]> {
+    const users = await this.usersRepository.findAllUsersWithRoles();
+    const usersWithRoles = await Promise.all(
+      users.map(async (user: any) => {
+        const role = await RolesModel.query().findById(user.roleId);
+        return new UserCurrentDto(user.id, user.username, role?.userRole ?? '');
+      })
+    );
+    return usersWithRoles;
   }
 
   async updateUserRole(userId: string, newRoleId: string): Promise<UserDto> {

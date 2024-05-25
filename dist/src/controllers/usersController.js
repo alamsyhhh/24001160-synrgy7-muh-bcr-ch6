@@ -1,5 +1,4 @@
 "use strict";
-// src/controllers/usersController.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -23,6 +22,7 @@ class UsersController {
         this.loginUser = this.loginUser.bind(this);
         this.updateUserRole = this.updateUserRole.bind(this);
         this.getCurrentUser = this.getCurrentUser.bind(this);
+        this.getAllUsers = this.getAllUsers.bind(this);
     }
     registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -80,6 +80,23 @@ class UsersController {
             }
             catch (error) {
                 console.error('Error fetching current user:', error);
+                if (error instanceof Error) {
+                    (0, responseHandler_1.wrapErrorResponse)(res, 500, error.message);
+                }
+                else {
+                    (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Internal server error');
+                }
+            }
+        });
+    }
+    getAllUsers(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield this.usersService.getAllUsers();
+                (0, responseHandler_1.wrapResponse)(res, 200, 'Users fetched successfully', users);
+            }
+            catch (error) {
+                console.error('Error fetching all users:', error);
                 if (error instanceof Error) {
                     (0, responseHandler_1.wrapErrorResponse)(res, 500, error.message);
                 }

@@ -1,5 +1,4 @@
 "use strict";
-// src/services/users/usersService.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -69,11 +68,6 @@ class UsersService {
                 });
             }
             const token = (0, jwt_1.generateToken)(user.id);
-            yield this.usersRepository.insertToken({
-                id: (0, uuid_1.v4)(),
-                token,
-                userId: user.id,
-            });
             return { user: new usersDto_1.UserDto(user.username), token };
         });
     }
@@ -90,6 +84,17 @@ class UsersService {
             // Ambil nama peran (role) dari tabel "roles" berdasarkan ID peran yang disimpan dalam tabel "users"
             const role = yield rolesModel_1.RolesModel.query().findById(user.roleId);
             return new usersCurrentDto_1.UserCurrentDto(user.id, user.username, (_a = role === null || role === void 0 ? void 0 : role.userRole) !== null && _a !== void 0 ? _a : '');
+        });
+    }
+    getAllUsers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const users = yield this.usersRepository.findAllUsersWithRoles();
+            const usersWithRoles = yield Promise.all(users.map((user) => __awaiter(this, void 0, void 0, function* () {
+                var _a;
+                const role = yield rolesModel_1.RolesModel.query().findById(user.roleId);
+                return new usersCurrentDto_1.UserCurrentDto(user.id, user.username, (_a = role === null || role === void 0 ? void 0 : role.userRole) !== null && _a !== void 0 ? _a : '');
+            })));
+            return usersWithRoles;
         });
     }
     updateUserRole(userId, newRoleId) {

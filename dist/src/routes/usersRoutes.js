@@ -15,5 +15,6 @@ const upload = (0, multer_1.default)();
 router.post('/register', upload.none(), usersController.registerUser);
 router.post('/login', upload.none(), usersController.loginUser);
 router.get('/current-user', auth_1.authenticateToken, usersController.getCurrentUser);
+router.get('/users', auth_1.authenticateToken, (0, auth_1.authorizeRoles)('3'), usersController.getAllUsers);
 // Menggunakan path parameter (:userId)
 router.put('/users/:userId/role', auth_1.authenticateToken, (0, auth_1.authorizeRoles)('3'), upload.none(), usersController.updateUserRole);

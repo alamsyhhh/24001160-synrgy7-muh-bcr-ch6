@@ -1,5 +1,4 @@
 import { Model, ModelObject } from 'objection';
-import { TokensModel } from './tokensModel';
 import { RolesModel } from './rolesModel';
 
 export class UsersModel extends Model {
@@ -23,14 +22,6 @@ export class UsersModel extends Model {
         join: {
           from: 'users.role_id',
           to: 'roles.id',
-        },
-      },
-      tokens: {
-        relation: Model.HasManyRelation,
-        modelClass: TokensModel,
-        join: {
-          from: 'users.id',
-          to: 'tokens.user_id',
         },
       },
     };
