@@ -2,10 +2,8 @@ import { Knex } from 'knex';
 import { v4 as uuidv4 } from 'uuid';
 
 export async function seed(knex: Knex): Promise<void> {
-  // Truncate the table to reset ID sequence to 1
   await knex.raw('TRUNCATE TABLE cars RESTART IDENTITY');
 
-  // Inserts seed entries
   await knex('cars').insert([
     {
       id: uuidv4(),

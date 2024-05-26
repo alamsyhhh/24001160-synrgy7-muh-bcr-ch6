@@ -4,6 +4,7 @@ import {
   wrapResponse,
   wrapErrorResponse,
   handleNotFoundError,
+  handleBadRequestError,
   handleInternalServerError,
 } from '../utils/responseHandler';
 
@@ -32,11 +33,22 @@ class CarController {
       if (newCar) {
         wrapResponse(res, 201, 'Data Berhasil Disimpan', newCar);
       } else {
-        wrapErrorResponse(res, 500, 'Failed to create car');
+        wrapErrorResponse(res, 400, 'Failed to create car');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      handleInternalServerError(res, 'Internal Server Error');
+
+      if (
+        error.message.includes('Missing required fields') ||
+        error.message.includes('Price must be a positive number') ||
+        error.message.includes('No image file uploaded') ||
+        error.message.includes('Only image files') ||
+        error.message.includes('Failed to get username from token')
+      ) {
+        wrapErrorResponse(res, 400, 'Invalid Input: ' + error.message);
+      } else {
+        wrapErrorResponse(res, 500, 'Internal Server Error');
+      }
     }
   }
 
@@ -48,9 +60,16 @@ class CarController {
       } else {
         handleNotFoundError(res, 'Car with the specified ID not found');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      handleInternalServerError(res, 'Internal Server Error');
+      if (
+        error.message === 'Price must be a positive number' ||
+        error.message === 'Failed to get username from token'
+      ) {
+        handleBadRequestError(res, error.message);
+      } else {
+        handleInternalServerError(res, 'Internal Server Error');
+      }
     }
   }
 

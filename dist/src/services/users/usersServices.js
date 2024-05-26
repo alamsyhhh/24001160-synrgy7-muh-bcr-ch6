@@ -33,9 +33,8 @@ class UsersService {
                 });
             }
             const hashedPassword = yield this.hashPassword(password);
-            const id = (0, uuid_1.v4)();
-            const user = yield this.usersRepository.insertUser({
-                id,
+            yield this.usersRepository.insertUser({
+                id: (0, uuid_1.v4)(),
                 username,
                 email,
                 password: hashedPassword,
@@ -43,7 +42,6 @@ class UsersService {
                 createdAt: new Date(),
                 updatedAt: new Date(),
             });
-            return new usersDto_1.UserDto(user.username);
         });
     }
     loginUser(email, password) {

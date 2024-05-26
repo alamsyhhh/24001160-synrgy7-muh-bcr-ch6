@@ -39,7 +39,7 @@ export class UsersController {
         email,
         password
       );
-      wrapResponse(res, 201, 'Register Success', userDto);
+      wrapErrorResponse(res, 201, 'Register Success');
     } catch (error) {
       console.error('Error registering user:', error);
       if (error instanceof ValidationError) {

@@ -12,10 +12,10 @@ export const validateUserInput = (
     });
   }
 
-  if (!password || password.length < 6) {
+  if (!password || password.length < 8) {
     throw new ValidationError({
       type: 'ModelValidation',
-      message: 'Password must be at least 6 characters long',
+      message: 'Password must be at least 8 characters long',
     });
   }
 

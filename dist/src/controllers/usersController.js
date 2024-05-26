@@ -30,7 +30,7 @@ class UsersController {
             const { username, email, password } = req.body;
             try {
                 const userDto = yield this.usersService.registerUser(username, email, password);
-                (0, responseHandler_1.wrapResponse)(res, 201, 'Register Success', userDto);
+                (0, responseHandler_1.wrapErrorResponse)(res, 201, 'Register Success');
             }
             catch (error) {
                 console.error('Error registering user:', error);

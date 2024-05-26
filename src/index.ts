@@ -18,8 +18,10 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apidocs));
 const cv1 = '/api/v1/cms';
 const v1 = '/api/v1';
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '500kb' })); // adjust the limit as needed
+
+// Increase the limit for URL-encoded payload
+app.use(express.urlencoded({ limit: '500kb', extended: true })); // adjust the limit as needed
 
 app.use(`${cv1}`, carRoutes, errorHandlingMiddleware);
 app.use(`${v1}`, userRoutes);

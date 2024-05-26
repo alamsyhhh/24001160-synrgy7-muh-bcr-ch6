@@ -11,7 +11,7 @@ export default function errorHandlingMiddleware(
     // Handle MulterError here
     const errorResponse = {
       status: 400,
-      message: 'Unexpected field. Please check your file upload.',
+      message: 'Unexpected field. Please check your file upload',
     };
     res.status(400).json(errorResponse);
   } else {

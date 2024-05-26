@@ -18,8 +18,9 @@ const app = (0, express_1.default)();
 app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(apidocs_json_1.default));
 const cv1 = '/api/v1/cms';
 const v1 = '/api/v1';
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
+app.use(express_1.default.json({ limit: '500kb' })); // adjust the limit as needed
+// Increase the limit for URL-encoded payload
+app.use(express_1.default.urlencoded({ limit: '500kb', extended: true })); // adjust the limit as needed
 app.use(`${cv1}`, carsRoutes_1.carRoutes, errorUploadHandlingMiddleware_1.default);
 app.use(`${v1}`, usersRoutes_1.userRoutes);
 app.listen(PORT, () => {

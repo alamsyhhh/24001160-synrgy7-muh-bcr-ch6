@@ -26,7 +26,7 @@ export class UsersService implements IUsersService {
     username: string,
     email: string,
     password: string
-  ): Promise<UserDto> {
+  ): Promise<void> {
     validateUserInput(username, email, password);
 
     const existingUser = await this.usersRepository.findByEmail(email);
@@ -39,9 +39,8 @@ export class UsersService implements IUsersService {
 
     const hashedPassword = await this.hashPassword(password);
 
-    const id = uuidv4();
-    const user = await this.usersRepository.insertUser({
-      id,
+    await this.usersRepository.insertUser({
+      id: uuidv4(),
       username,
       email,
       password: hashedPassword,
@@ -49,8 +48,6 @@ export class UsersService implements IUsersService {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-
-    return new UserDto(user.username);
   }
 
   async loginUser(

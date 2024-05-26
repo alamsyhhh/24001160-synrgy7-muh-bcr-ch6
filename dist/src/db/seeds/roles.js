@@ -14,9 +14,7 @@ function seed(knex) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield knex.transaction((trx) => __awaiter(this, void 0, void 0, function* () {
-                // Truncate the table to reset ID sequence to 1
                 yield trx.raw('TRUNCATE TABLE roles RESTART IDENTITY CASCADE');
-                // Inserts seed entries
                 yield trx('roles').insert([
                     { id: '1', userRole: 'member' },
                     { id: '2', userRole: 'admin' },

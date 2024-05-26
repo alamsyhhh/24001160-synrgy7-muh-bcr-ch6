@@ -17,13 +17,11 @@ const uuid_1 = require("uuid");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 function seed(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        // Hapus semua data dari tabel users
         yield knex('users').del();
-        // Masukkan entri seed
         yield knex('users').insert([
             {
                 id: (0, uuid_1.v4)(),
-                username: 'member',
+                username: 'andi',
                 email: 'member@gmail.com',
                 password: yield bcrypt_1.default.hash('member12345', 10),
                 roleId: '1',
@@ -32,7 +30,7 @@ function seed(knex) {
             },
             {
                 id: (0, uuid_1.v4)(),
-                username: 'admin',
+                username: 'firman',
                 email: 'admin@gmail.com',
                 password: yield bcrypt_1.default.hash('admin12345', 10),
                 roleId: '2',
@@ -41,7 +39,7 @@ function seed(knex) {
             },
             {
                 id: (0, uuid_1.v4)(),
-                username: 'super admin',
+                username: 'rizki',
                 email: 'sAdmin@gmail.com',
                 password: yield bcrypt_1.default.hash('sadmin12345', 10),
                 roleId: '3',

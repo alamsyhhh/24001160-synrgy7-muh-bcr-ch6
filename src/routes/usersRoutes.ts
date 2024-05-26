@@ -16,14 +16,14 @@ router.post('/login', upload.none(), usersController.loginUser);
 router.get('/current-user', authenticateToken, usersController.getCurrentUser);
 
 router.get(
-  '/users',
+  '/cms/users',
   authenticateToken,
   authorizeRoles('3'),
   usersController.getAllUsers
 );
 
 router.put(
-  '/users/:userId/role',
+  '/cms/users/:userId/role',
   authenticateToken,
   authorizeRoles('3'),
   upload.none(),

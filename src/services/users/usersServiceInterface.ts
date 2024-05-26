@@ -6,7 +6,7 @@ export interface IUsersService {
     username: string,
     email: string,
     password: string
-  ): Promise<UserDto>;
+  ): Promise<void>;
   loginUser(
     email: string,
     password: string

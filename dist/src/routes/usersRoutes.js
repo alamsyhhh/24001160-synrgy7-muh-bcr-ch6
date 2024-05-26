@@ -15,5 +15,5 @@ const upload = (0, multer_1.default)();
 router.post('/register', upload.none(), usersController.registerUser);
 router.post('/login', upload.none(), usersController.loginUser);
 router.get('/current-user', authMiddlewares_1.authenticateToken, usersController.getCurrentUser);
-router.get('/users', authMiddlewares_1.authenticateToken, (0, authMiddlewares_1.authorizeRoles)('3'), usersController.getAllUsers);
-router.put('/users/:userId/role', authMiddlewares_1.authenticateToken, (0, authMiddlewares_1.authorizeRoles)('3'), upload.none(), usersController.updateUserRole);
+router.get('/cms/users', authMiddlewares_1.authenticateToken, (0, authMiddlewares_1.authorizeRoles)('3'), usersController.getAllUsers);
+router.put('/cms/users/:userId/role', authMiddlewares_1.authenticateToken, (0, authMiddlewares_1.authorizeRoles)('3'), upload.none(), usersController.updateUserRole);

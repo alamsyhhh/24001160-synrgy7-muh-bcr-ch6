@@ -72,6 +72,14 @@ class CarService implements ICarService {
   async createCar(req: Request): Promise<CarDTO | null> {
     const { name, price, category, startRent, finishRent } = req.body;
 
+    if (!name || !category || !price) {
+      throw new Error('Missing required fields: name, category, or price');
+    }
+
+    if (isNaN(price) || price <= 0) {
+      throw new Error('Price must be a positive number');
+    }
+
     if (!req.file) {
       throw new Error('No image file uploaded');
     }
@@ -109,7 +117,7 @@ class CarService implements ICarService {
               id: uuidv4(),
               name,
               category,
-              price,
+              price: parseInt(price, 10),
               image: imageUrl,
               startRent: startRent ? new Date(startRent) : null,
               finishRent: finishRent ? new Date(finishRent) : null,
@@ -146,6 +154,10 @@ class CarService implements ICarService {
 
       if (!username) {
         throw new Error('Failed to get username from token');
+      }
+
+      if (isNaN(price) || price <= 0) {
+        throw new Error('Price must be a positive number');
       }
 
       if (req.file) {

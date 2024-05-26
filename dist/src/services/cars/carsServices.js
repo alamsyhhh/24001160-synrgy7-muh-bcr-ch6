@@ -72,6 +72,12 @@ class CarService {
     createCar(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const { name, price, category, startRent, finishRent } = req.body;
+            if (!name || !category || !price) {
+                throw new Error('Missing required fields: name, category, or price');
+            }
+            if (isNaN(price) || price <= 0) {
+                throw new Error('Price must be a positive number');
+            }
             if (!req.file) {
                 throw new Error('No image file uploaded');
             }
@@ -98,7 +104,7 @@ class CarService {
                             id: (0, uuid_1.v4)(),
                             name,
                             category,
-                            price,
+                            price: parseInt(price, 10),
                             image: imageUrl,
                             startRent: startRent ? new Date(startRent) : null,
                             finishRent: finishRent ? new Date(finishRent) : null,
@@ -132,6 +138,9 @@ class CarService {
                 const username = token ? yield (0, jwtUtils_1.getUsernameFromToken)(token) : 'unknown';
                 if (!username) {
                     throw new Error('Failed to get username from token');
+                }
+                if (isNaN(price) || price <= 0) {
+                    throw new Error('Price must be a positive number');
                 }
                 if (req.file) {
                     const fileBase64 = req.file.buffer.toString('base64');

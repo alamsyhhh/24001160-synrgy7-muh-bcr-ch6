@@ -13,9 +13,7 @@ exports.seed = void 0;
 const uuid_1 = require("uuid");
 function seed(knex) {
     return __awaiter(this, void 0, void 0, function* () {
-        // Truncate the table to reset ID sequence to 1
         yield knex.raw('TRUNCATE TABLE cars RESTART IDENTITY');
-        // Inserts seed entries
         yield knex('cars').insert([
             {
                 id: (0, uuid_1.v4)(),

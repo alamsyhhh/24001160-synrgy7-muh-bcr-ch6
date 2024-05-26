@@ -44,12 +44,21 @@ class CarController {
                     (0, responseHandler_1.wrapResponse)(res, 201, 'Data Berhasil Disimpan', newCar);
                 }
                 else {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Failed to create car');
+                    (0, responseHandler_1.wrapErrorResponse)(res, 400, 'Failed to create car');
                 }
             }
             catch (error) {
                 console.error(error);
-                (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
+                if (error.message.includes('Missing required fields') ||
+                    error.message.includes('Price must be a positive number') ||
+                    error.message.includes('No image file uploaded') ||
+                    error.message.includes('Only image files') ||
+                    error.message.includes('Failed to get username from token')) {
+                    (0, responseHandler_1.wrapErrorResponse)(res, 400, 'Invalid Input: ' + error.message);
+                }
+                else {
+                    (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Internal Server Error');
+                }
             }
         });
     }
@@ -66,7 +75,13 @@ class CarController {
             }
             catch (error) {
                 console.error(error);
-                (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
+                if (error.message === 'Price must be a positive number' ||
+                    error.message === 'Failed to get username from token') {
+                    (0, responseHandler_1.handleBadRequestError)(res, error.message);
+                }
+                else {
+                    (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
+                }
             }
         });
     }
