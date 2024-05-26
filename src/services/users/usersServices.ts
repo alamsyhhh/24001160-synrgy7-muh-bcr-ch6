@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { ValidationError } from 'objection';
 import {
@@ -10,7 +9,6 @@ import { UserDto } from '../../dto/users/usersDto';
 import { IUsersRepository } from '../../repositories/users/usersRepositoryInterface';
 import { IUsersService } from './usersServiceInterface';
 import { UserCurrentDto } from '../../dto/users/usersCurrentDto';
-import { RolesModel } from '../../db/models/rolesModel';
 
 export class UsersService implements IUsersService {
   constructor(
@@ -100,7 +98,7 @@ export class UsersService implements IUsersService {
     return usersWithRoles;
   }
 
-  async updateUserRole(userId: string, newRoleId: string): Promise<UserDto> {
+  async updateUserRole(userId: string, newRoleId: string): Promise<void> {
     const user = await this.usersRepository.findById(userId);
     if (!user) {
       throw new ValidationError({
@@ -123,10 +121,6 @@ export class UsersService implements IUsersService {
       });
     }
 
-    const updatedUser = await this.usersRepository.updateUserRole(
-      userId,
-      newRoleId
-    );
-    return new UserDto(updatedUser.username);
+    await this.usersRepository.updateUserRole(userId, newRoleId);
   }
 }

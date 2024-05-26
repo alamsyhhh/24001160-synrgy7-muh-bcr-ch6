@@ -107,8 +107,7 @@ class UsersService {
                     message: 'Cannot update super admin role',
                 });
             }
-            const updatedUser = yield this.usersRepository.updateUserRole(userId, newRoleId);
-            return new usersDto_1.UserDto(updatedUser.username);
+            yield this.usersRepository.updateUserRole(userId, newRoleId);
         });
     }
 }

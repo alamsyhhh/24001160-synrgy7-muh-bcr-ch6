@@ -29,7 +29,7 @@ class UsersController {
         return __awaiter(this, void 0, void 0, function* () {
             const { username, email, password } = req.body;
             try {
-                const userDto = yield this.usersService.registerUser(username, email, password);
+                yield this.usersService.registerUser(username, email, password);
                 (0, responseHandler_1.wrapErrorResponse)(res, 201, 'Register Success');
             }
             catch (error) {
@@ -96,8 +96,8 @@ class UsersController {
             const { userId } = req.params;
             const { newRoleId } = req.body;
             try {
-                const userDto = yield this.usersService.updateUserRole(userId, newRoleId);
-                (0, responseHandler_1.wrapResponse)(res, 200, 'User role updated successfully', userDto);
+                yield this.usersService.updateUserRole(userId, newRoleId);
+                (0, responseHandler_1.wrapErrorResponse)(res, 200, 'User role updated successfully');
             }
             catch (error) {
                 console.error('Error updating user role:', error);

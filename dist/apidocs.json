@@ -35,7 +35,7 @@
             "description": "Authentication related operations"
         },
         {
-            "name": "User",
+            "name": "Users",
             "description": "Operations related to user management"
         },
         {
@@ -44,10 +44,10 @@
         }
     ],
     "paths": {
-        "/api/v1/login": {
+        "/api/v1/auth/login": {
             "post": {
                 "tags": ["Auth"],
-                "summary": "Log in user",
+                "summary": "Login user",
                 "description": "Log in user with provided credentials",
                 "requestBody": {
                     "required": true,
@@ -68,21 +68,21 @@
                             },
                             "examples": {
                                 "Member": {
-                                    "summary": "Member",
+                                    "summary": "Login as Member",
                                     "value": {
                                         "email": "member@gmail.com",
                                         "password": "member12345"
                                     }
                                 },
                                 "Admin": {
-                                    "summary": "Admin",
+                                    "summary": "Login as Admin",
                                     "value": {
                                         "email": "admin@gmail.com",
                                         "password": "admin12345"
                                     }
                                 },
                                 "Super Admin": {
-                                    "summary": "Super Admin",
+                                    "summary": "Login as Super Admin",
                                     "value": {
                                         "email": "sAdmin@gmail.com",
                                         "password": "sadmin12345"
@@ -98,19 +98,19 @@
                                     "email": {
                                         "type": "string",
                                         "description": "User's email address",
-                                        "example": "user@example.com"
+                                        "example": "admin@gmail.com"
                                     },
                                     "password": {
                                         "type": "string",
                                         "description": "User's password",
-                                        "example": "password123"
+                                        "example": "admin12345"
                                     }
                                 }
                             },
                             "examples": {
                                 "form": {
                                     "summary": "Form example",
-                                    "value": "email=user@example.com&password=password123"
+                                    "value": "email=admin@gmail.com&password=admin12345"
                                 }
                             }
                         }
@@ -194,9 +194,9 @@
                 }
             }
         },
-        "/api/v1/register": {
+        "/api/v1/users/register": {
             "post": {
-                "tags": ["User"],
+                "tags": ["Users"],
                 "summary": "Register a new user",
                 "description": "Register a new user with the provided credentials",
                 "requestBody": {
@@ -335,17 +335,57 @@
                 }
             }
         },
-        "/api/v1/users": {
+        "/api/v1/users/current-user": {
             "get": {
-                "tags": ["User"],
-                "summary": "Get all users",
-                "description": "Get all users",
+                "tags": ["Users"],
+                "summary": "Get current user",
+                "description": "Get current logged-in user details",
                 "responses": {
                     "200": {
-                        "description": "Successfully retrieved users"
+                        "description": "Successfully retrieved car details",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "value": {
+                                        "status": 200,
+                                        "message": "User fetched successfully",
+                                        "data": {
+                                            "user": {
+                                                "id": "55c174d4-d893-4686-b056-7f5103cbfb75",
+                                                "username": "user1",
+                                                "role": "member"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized, Access Token Required",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "Access Token Required"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Token Expired",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "value": {
+                                        "status": 404,
+                                        "message": "User not found"
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -355,11 +395,100 @@
                 ]
             }
         },
-        "/api/v1/users/{userId}/role": {
+        "/api/v1/cms/users": {
+            "get": {
+                "tags": ["Users"],
+                "summary": "Get all users only super admin to accsess this",
+                "description": "Get all users only super admin to accsess this",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved car details",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "value": {
+                                        "status": 200,
+                                        "message": "Users fetched successfully",
+                                        "data": [
+                                            {
+                                                "id": "f770bbb0-bf4c-44a0-a1be-76e90869e1ac",
+                                                "username": "andi",
+                                                "role": "member"
+                                            },
+                                            {
+                                                "id": "f86f211f-833e-4f5f-ae9b-86ebd554bf72",
+                                                "username": "firman",
+                                                "role": "admin"
+                                            },
+                                            {
+                                                "id": "d560bb2f-11fe-4676-aae4-fa12cdbd4abb",
+                                                "username": "rizki",
+                                                "role": "super admin"
+                                            },
+                                            {
+                                                "id": "55c174d4-d893-4686-b056-7f5103cbfb75",
+                                                "username": "user1",
+                                                "role": "member"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, Access Token Required",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "Access Token Required"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access Denied Required Admin & Super Admin roles to Access",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "Access Denied": {
+                                        "description": "Access Denied response",
+                                        "status": 403,
+                                        "message": "Access Denied"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Token Expired",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "Access Denied": {
+                                        "status": 404,
+                                        "message": "User not found"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/cms/users/{userId}/role": {
             "put": {
-                "tags": ["User"],
-                "summary": "Update user role",
-                "description": "Update the role of a user with the provided userId",
+                "tags": ["Users"],
+                "summary": "Update user role from member to admin",
+                "description": "Update the role of a user with the provided userId from member to admin (only super admin to accsess this)",
                 "parameters": [
                     {
                         "in": "path",
@@ -374,12 +503,27 @@
                 "requestBody": {
                     "required": true,
                     "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "newRoleId": {
+                                        "type": "integer",
+                                        "example": "2"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "newRoleId": "2"
+                            }
+                        },
                         "application/x-www-form-urlencoded": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "role": {
-                                        "type": "string"
+                                    "newRoleId": {
+                                        "type": "integer",
+                                        "example": 2
                                     }
                                 }
                             }
@@ -388,38 +532,56 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully updated user role"
+                        "description": "Successfully retrieved car details",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "value": {
+                                        "status": 200,
+                                        "message": "User role updated successfully"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized, Access Token Required",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "Access Token Required"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Access Denied Required Admin & Super Admin roles to Access",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 403,
+                                    "message": "Access Denied"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "User not found"
+                        "description": "Token Expired",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "value": {
+                                        "status": 404,
+                                        "message": "User not found"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-            }
-        },
-        "/api/v1/current-user": {
-            "get": {
-                "tags": ["User"],
-                "summary": "Get current user",
-                "description": "Get current logged-in user details",
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved current user"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ]
             }
         },
         "/api/v1/cms/cars": {

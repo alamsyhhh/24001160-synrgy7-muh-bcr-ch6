@@ -12,16 +12,14 @@ Model.knex(knexInstance);
 const PORT = 9000;
 const app: Express = express();
 
-// Menggunakan spesifikasi Swagger dari file apidocs.json
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apidocs));
 
 const cv1 = '/api/v1/cms';
 const v1 = '/api/v1';
 
-app.use(express.json({ limit: '500kb' })); // adjust the limit as needed
+app.use(express.json());
 
-// Increase the limit for URL-encoded payload
-app.use(express.urlencoded({ limit: '500kb', extended: true })); // adjust the limit as needed
+app.use(express.urlencoded({ extended: true }));
 
 app.use(`${cv1}`, carRoutes, errorHandlingMiddleware);
 app.use(`${v1}`, userRoutes);

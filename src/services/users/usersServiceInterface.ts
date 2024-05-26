@@ -12,6 +12,6 @@ export interface IUsersService {
     password: string
   ): Promise<{ user: UserDto; token: string }>;
   getAllUsers(): Promise<UserCurrentDto[]>;
-  updateUserRole(userId: string, newRoleId: string): Promise<UserDto>;
+  updateUserRole(userId: string, newRoleId: string): Promise<void>;
   getCurrentUser(userId: string): Promise<UserDto>;
 }

@@ -5,14 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.extractPublicId = exports.generateUniqueFileName = void 0;
 const multer_1 = __importDefault(require("multer"));
-// Konfigurasi penyimpanan untuk multer
 const storage = multer_1.default.memoryStorage();
-// Fungsi untuk memeriksa apakah tipe file yang diunggah adalah gambar
 const fileFilter = (req, file, cb) => {
-    // Daftar tipe file yang diizinkan
     const allowedMimeTypes = ['image/jpeg', 'image/png'];
     const res = req.res;
-    // Periksa apakah tipe file yang diunggah termasuk dalam daftar tipe yang diizinkan
     if (allowedMimeTypes.includes(file.mimetype)) {
         cb(null, true);
     }
@@ -26,7 +22,6 @@ const fileFilter = (req, file, cb) => {
 };
 const upload = (0, multer_1.default)({ storage, fileFilter });
 exports.default = upload;
-// Fungsi untuk menghasilkan nama file acak
 function generateRandomCode(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
@@ -35,11 +30,9 @@ function generateRandomCode(length) {
     }
     return result;
 }
-// Fungsi untuk mengambil ekstensi file
 function getFileExtension(fileName) {
     return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2);
 }
-// Fungsi untuk membuat nama file unik dengan waktu saat diunggah dan kode acak
 function generateUniqueFileName(fileName) {
     const timestamp = new Date().getTime();
     const randomCode = generateRandomCode(8);

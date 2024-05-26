@@ -34,11 +34,7 @@ export class UsersController {
   async registerUser(req: Request, res: Response): Promise<void> {
     const { username, email, password } = req.body;
     try {
-      const userDto = await this.usersService.registerUser(
-        username,
-        email,
-        password
-      );
+      await this.usersService.registerUser(username, email, password);
       wrapErrorResponse(res, 201, 'Register Success');
     } catch (error) {
       console.error('Error registering user:', error);
@@ -97,8 +93,8 @@ export class UsersController {
     const { userId } = req.params;
     const { newRoleId } = req.body;
     try {
-      const userDto = await this.usersService.updateUserRole(userId, newRoleId);
-      wrapResponse(res, 200, 'User role updated successfully', userDto);
+      await this.usersService.updateUserRole(userId, newRoleId);
+      wrapErrorResponse(res, 200, 'User role updated successfully');
     } catch (error) {
       console.error('Error updating user role:', error);
       if (error instanceof ValidationError) {

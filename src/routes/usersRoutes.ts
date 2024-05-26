@@ -11,9 +11,13 @@ const usersController = new UsersController();
 
 const upload = multer();
 
-router.post('/register', upload.none(), usersController.registerUser);
-router.post('/login', upload.none(), usersController.loginUser);
-router.get('/current-user', authenticateToken, usersController.getCurrentUser);
+router.post('/auth/login', upload.none(), usersController.loginUser);
+router.post('/users/register', upload.none(), usersController.registerUser);
+router.get(
+  '/users/current-user',
+  authenticateToken,
+  usersController.getCurrentUser
+);
 
 router.get(
   '/cms/users',

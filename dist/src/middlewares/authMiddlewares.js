@@ -35,7 +35,7 @@ const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         }
         const user = yield usersModel_1.UsersModel.query().findById(decoded.id);
         if (!user) {
-            return (0, responseHandler_1.handleErrorResponse)(res, 403, 'User not found');
+            return (0, responseHandler_1.handleErrorResponse)(res, 404, 'User not found');
         }
         req.user = user;
         next();

@@ -42,7 +42,7 @@ export const authenticateToken = async (
     const user = await UsersModel.query().findById(decoded.id);
 
     if (!user) {
-      return handleErrorResponse(res, 403, 'User not found');
+      return handleErrorResponse(res, 404, 'User not found');
     }
 
     req.user = user;
