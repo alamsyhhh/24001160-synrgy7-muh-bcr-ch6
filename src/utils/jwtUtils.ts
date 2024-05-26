@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { UsersModel } from '../db/models/usersModel';
 
-dotenv.config(); // Load environment variables from .env
+dotenv.config();
 
-const secretKey = process.env.JWT_SECRET as string;
+const secretKey = (process.env.JWT_SECRET as string) || 'JWT_SECRET';
 
 if (!secretKey) {
   throw new Error('JWT_SECRET is not defined in the environment variables');
@@ -12,22 +12,22 @@ if (!secretKey) {
 
 export const generateToken = (userId: string): string => {
   const payload = { id: userId };
-  const options = { expiresIn: '24h' }; // Token will expire in 1 hour
+  const options = { expiresIn: '24h' };
   return jwt.sign(payload, secretKey, options);
 };
 
 export const decryptToken = (token: string): string | null => {
-  console.log('Token to decrypt:', token); // Log token
-  console.log('Using secret key:', secretKey); // Log secret key
-  const tokenWithoutBearer = token.replace('Bearer ', ''); // Remove 'Bearer' from the token
+  // console.log('Token to decrypt:', token);
+  // console.log('Using secret key:', secretKey);
+  const tokenWithoutBearer = token.replace('Bearer ', '');
   try {
     const decodedToken = jwt.verify(tokenWithoutBearer, secretKey) as {
       id: string;
     };
-    console.log('Decoded token:', decodedToken); // Log decoded token
+    // console.log('Decoded token:', decodedToken);
     return decodedToken.id;
   } catch (error) {
-    console.error('Error decrypting token: ', error);
+    // console.error('Error decrypting token: ', error);
     return null;
   }
 };

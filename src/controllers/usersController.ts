@@ -1,16 +1,28 @@
+// UsersController.ts
 import { Request, Response } from 'express';
-import { wrapErrorResponse, wrapResponse } from '../utils/responseHandler';
-import { AuthenticatedRequest } from '../middlewares/auth';
+import {
+  wrapResponse,
+  wrapErrorResponse,
+  handleNotFoundError,
+  handleInternalServerError,
+  handleBadRequestError,
+} from '../utils/responseHandler';
+import { AuthenticatedRequest } from '../middlewares/authMiddlewares';
 import { UsersService } from '../services/users/usersServices';
 import { UsersRepository } from '../repositories/users/usersRepository';
 import { ValidationError } from 'objection';
+import { hashPassword, comparePassword } from '../utils/bcryptUtils';
 
 export class UsersController {
   private usersService: UsersService;
 
   constructor() {
     const usersRepository = new UsersRepository();
-    this.usersService = new UsersService(usersRepository);
+    this.usersService = new UsersService(
+      usersRepository,
+      hashPassword,
+      comparePassword
+    );
 
     this.registerUser = this.registerUser.bind(this);
     this.loginUser = this.loginUser.bind(this);
@@ -31,11 +43,9 @@ export class UsersController {
     } catch (error) {
       console.error('Error registering user:', error);
       if (error instanceof ValidationError) {
-        wrapErrorResponse(res, 400, error.message);
-      } else if (error instanceof Error) {
-        wrapErrorResponse(res, 500, error.message);
+        handleBadRequestError(res, error.message);
       } else {
-        wrapErrorResponse(res, 500, 'Internal server error');
+        handleInternalServerError(res, 'Internal Server Error');
       }
     }
   }
@@ -46,13 +56,11 @@ export class UsersController {
       const result = await this.usersService.loginUser(email, password);
       wrapResponse(res, 200, 'Login Success', result);
     } catch (error) {
-      console.error('Error logging in user:', error);
+      // console.error('Error logging in user:', error);
       if (error instanceof ValidationError) {
         wrapErrorResponse(res, 400, error.message);
-      } else if (error instanceof Error) {
-        wrapErrorResponse(res, 500, error.message);
       } else {
-        wrapErrorResponse(res, 500, 'Internal server error');
+        handleInternalServerError(res, 'Internal Server Error');
       }
     }
   }
@@ -67,15 +75,11 @@ export class UsersController {
         const userDto = await this.usersService.getCurrentUser(user.id);
         wrapResponse(res, 200, 'User fetched successfully', { user: userDto });
       } else {
-        wrapErrorResponse(res, 404, 'User not found');
+        handleNotFoundError(res, 'User not found');
       }
     } catch (error) {
       console.error('Error fetching current user:', error);
-      if (error instanceof Error) {
-        wrapErrorResponse(res, 500, error.message);
-      } else {
-        wrapErrorResponse(res, 500, 'Internal server error');
-      }
+      handleInternalServerError(res, 'Internal Server Error');
     }
   }
 
@@ -85,11 +89,7 @@ export class UsersController {
       wrapResponse(res, 200, 'Users fetched successfully', users);
     } catch (error) {
       console.error('Error fetching all users:', error);
-      if (error instanceof Error) {
-        wrapErrorResponse(res, 500, error.message);
-      } else {
-        wrapErrorResponse(res, 500, 'Internal server error');
-      }
+      handleInternalServerError(res, 'Internal Server Error');
     }
   }
 
@@ -103,10 +103,8 @@ export class UsersController {
       console.error('Error updating user role:', error);
       if (error instanceof ValidationError) {
         wrapErrorResponse(res, 400, error.message);
-      } else if (error instanceof Error) {
-        wrapErrorResponse(res, 500, error.message);
       } else {
-        wrapErrorResponse(res, 500, 'Internal server error');
+        handleInternalServerError(res, 'Internal Server Error');
       }
     }
   }

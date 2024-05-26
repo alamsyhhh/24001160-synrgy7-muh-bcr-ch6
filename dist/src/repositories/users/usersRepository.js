@@ -18,6 +18,11 @@ class UsersRepository {
             return usersModel_1.UsersModel.query().findById(id);
         });
     }
+    findRoleById(roleId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return rolesModel_1.RolesModel.query().findById(roleId);
+        });
+    }
     findByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
             return usersModel_1.UsersModel.query().findOne({ email });

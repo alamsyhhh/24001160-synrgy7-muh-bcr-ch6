@@ -1,7 +1,10 @@
 import express, { Router } from 'express';
 import carController from '../controllers/carsController';
 import upload from '../middlewares/multer';
-import { authenticateToken, authorizeRoles } from '../middlewares/auth';
+import {
+  authenticateToken,
+  authorizeRoles,
+} from '../middlewares/authMiddlewares';
 
 const router: Router = express.Router();
 

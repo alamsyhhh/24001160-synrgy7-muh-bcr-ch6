@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
 import { carRoutes } from './routes/carsRoutes';
 import { userRoutes } from './routes/usersRoutes';
-import { knexInstance } from '../config/config';
+import { knexInstance } from '../config/postgresConfig';
 import { Model } from 'objection';
 import errorHandlingMiddleware from './middlewares/errorUploadHandlingMiddleware';
 import swaggerUi from 'swagger-ui-express';

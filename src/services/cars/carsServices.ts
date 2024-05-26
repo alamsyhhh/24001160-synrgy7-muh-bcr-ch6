@@ -4,8 +4,8 @@ import carRepository from '../../repositories/cars/carsRepository';
 import { ICarService } from './carsServiceInterface';
 import { wrapResponse, wrapErrorResponse } from '../../utils/responseHandler';
 import { v4 as uuidv4 } from 'uuid';
-import cloudinary from '../../../config/cloudinary';
-import { getUsernameFromToken } from '../../utils/jwt';
+import cloudinary from '../../../config/cloudinaryConfig';
+import { getUsernameFromToken } from '../../utils/jwtUtils';
 
 import {
   generateUniqueFileName,
@@ -209,7 +209,7 @@ class CarService implements ICarService {
       if (updatedCar) {
         wrapErrorResponse(res, 200, 'Car deleted successfully');
       } else {
-        wrapErrorResponse(res, 500, 'Failed to delete car');
+        wrapErrorResponse(res, 400, 'Failed to delete car');
       }
     } catch (error) {
       console.error('Error deleting car:', error);

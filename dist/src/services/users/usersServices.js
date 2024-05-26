@@ -8,22 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const uuid_1 = require("uuid");
 const objection_1 = require("objection");
 const usersValidators_1 = require("../../utils/usersValidators");
-const jwt_1 = require("../../utils/jwt");
+const jwtUtils_1 = require("../../utils/jwtUtils");
 const usersDto_1 = require("../../dto/users/usersDto");
 const usersCurrentDto_1 = require("../../dto/users/usersCurrentDto");
-const rolesModel_1 = require("../../db/models/rolesModel");
 class UsersService {
-    constructor(usersRepository) {
+    constructor(usersRepository, hashPassword, comparePassword) {
         this.usersRepository = usersRepository;
+        this.hashPassword = hashPassword;
+        this.comparePassword = comparePassword;
     }
     registerUser(username, email, password) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -35,8 +32,7 @@ class UsersService {
                     message: 'Email already registered',
                 });
             }
-            const saltRounds = 10;
-            const hashedPassword = yield bcrypt_1.default.hash(password, saltRounds);
+            const hashedPassword = yield this.hashPassword(password);
             const id = (0, uuid_1.v4)();
             const user = yield this.usersRepository.insertUser({
                 id,
@@ -60,14 +56,14 @@ class UsersService {
                     message: 'Invalid email or password',
                 });
             }
-            const passwordMatch = yield bcrypt_1.default.compare(password, user.password);
+            const passwordMatch = yield this.comparePassword(password, user.password);
             if (!passwordMatch) {
                 throw new objection_1.ValidationError({
                     type: 'ModelValidation',
                     message: 'Invalid email or password',
                 });
             }
-            const token = (0, jwt_1.generateToken)(user.id);
+            const token = (0, jwtUtils_1.generateToken)(user.id);
             return { user: new usersDto_1.UserDto(user.username), token };
         });
     }
@@ -81,19 +77,14 @@ class UsersService {
                     message: 'User not found',
                 });
             }
-            // Ambil nama peran (role) dari tabel "roles" berdasarkan ID peran yang disimpan dalam tabel "users"
-            const role = yield rolesModel_1.RolesModel.query().findById(user.roleId);
+            const role = yield this.usersRepository.findRoleById(user.roleId);
             return new usersCurrentDto_1.UserCurrentDto(user.id, user.username, (_a = role === null || role === void 0 ? void 0 : role.userRole) !== null && _a !== void 0 ? _a : '');
         });
     }
     getAllUsers() {
         return __awaiter(this, void 0, void 0, function* () {
             const users = yield this.usersRepository.findAllUsersWithRoles();
-            const usersWithRoles = yield Promise.all(users.map((user) => __awaiter(this, void 0, void 0, function* () {
-                var _a;
-                const role = yield rolesModel_1.RolesModel.query().findById(user.roleId);
-                return new usersCurrentDto_1.UserCurrentDto(user.id, user.username, (_a = role === null || role === void 0 ? void 0 : role.userRole) !== null && _a !== void 0 ? _a : '');
-            })));
+            const usersWithRoles = users.map((user) => { var _a, _b; return new usersCurrentDto_1.UserCurrentDto(user.id, user.username, (_b = (_a = user.role) === null || _a === void 0 ? void 0 : _a.userRole) !== null && _b !== void 0 ? _b : ''); });
             return usersWithRoles;
         });
     }

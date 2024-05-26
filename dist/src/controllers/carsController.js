@@ -26,7 +26,7 @@ class CarController {
             }
             catch (error) {
                 console.error('Error getting cars:', error);
-                (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Internal Server Error');
+                (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
             }
         });
     }
@@ -44,12 +44,12 @@ class CarController {
                     (0, responseHandler_1.wrapResponse)(res, 201, 'Data Berhasil Disimpan', newCar);
                 }
                 else {
-                    (0, responseHandler_1.wrapResponse)(res, 500, 'Failed to create car', newCar);
+                    (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Failed to create car');
                 }
             }
             catch (error) {
                 console.error(error);
-                (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Internal Server Error');
+                (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
             }
         });
     }
@@ -61,12 +61,12 @@ class CarController {
                     (0, responseHandler_1.wrapResponse)(res, 200, 'Car updated successfully', updatedCar);
                 }
                 else {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 404, 'Car with the specified ID not found');
+                    (0, responseHandler_1.handleNotFoundError)(res, 'Car with the specified ID not found');
                 }
             }
             catch (error) {
                 console.error(error);
-                (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Internal Server Error');
+                (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
             }
         });
     }

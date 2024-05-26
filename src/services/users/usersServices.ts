@@ -5,7 +5,7 @@ import {
   validateUserInput,
   validateLoginInput,
 } from '../../utils/usersValidators';
-import { generateToken } from '../../utils/jwt';
+import { generateToken } from '../../utils/jwtUtils';
 import { UserDto } from '../../dto/users/usersDto';
 import { IUsersRepository } from '../../repositories/users/usersRepositoryInterface';
 import { IUsersService } from './usersServiceInterface';
@@ -13,7 +13,14 @@ import { UserCurrentDto } from '../../dto/users/usersCurrentDto';
 import { RolesModel } from '../../db/models/rolesModel';
 
 export class UsersService implements IUsersService {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    private usersRepository: IUsersRepository,
+    private hashPassword: (password: string) => Promise<string>,
+    private comparePassword: (
+      password: string,
+      hashedPassword: string
+    ) => Promise<boolean>
+  ) {}
 
   async registerUser(
     username: string,
@@ -30,8 +37,7 @@ export class UsersService implements IUsersService {
       });
     }
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await this.hashPassword(password);
 
     const id = uuidv4();
     const user = await this.usersRepository.insertUser({
@@ -61,7 +67,7 @@ export class UsersService implements IUsersService {
       });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await this.comparePassword(password, user.password);
     if (!passwordMatch) {
       throw new ValidationError({
         type: 'ModelValidation',
@@ -83,19 +89,16 @@ export class UsersService implements IUsersService {
       });
     }
 
-    // Ambil nama peran (role) dari tabel "roles" berdasarkan ID peran yang disimpan dalam tabel "users"
-    const role = await RolesModel.query().findById(user.roleId);
+    const role = await this.usersRepository.findRoleById(user.roleId);
 
     return new UserCurrentDto(user.id, user.username, role?.userRole ?? '');
   }
 
   async getAllUsers(): Promise<UserCurrentDto[]> {
     const users = await this.usersRepository.findAllUsersWithRoles();
-    const usersWithRoles = await Promise.all(
-      users.map(async (user: any) => {
-        const role = await RolesModel.query().findById(user.roleId);
-        return new UserCurrentDto(user.id, user.username, role?.userRole ?? '');
-      })
+    const usersWithRoles = users.map(
+      (user) =>
+        new UserCurrentDto(user.id, user.username, user.role?.userRole ?? '')
     );
     return usersWithRoles;
   }

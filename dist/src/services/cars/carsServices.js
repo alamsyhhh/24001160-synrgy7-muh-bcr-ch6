@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const carsRepository_1 = __importDefault(require("../../repositories/cars/carsRepository"));
 const responseHandler_1 = require("../../utils/responseHandler");
 const uuid_1 = require("uuid");
-const cloudinary_1 = __importDefault(require("../../../config/cloudinary"));
-const jwt_1 = require("../../utils/jwt");
+const cloudinaryConfig_1 = __importDefault(require("../../../config/cloudinaryConfig"));
+const jwtUtils_1 = require("../../utils/jwtUtils");
 const multer_1 = require("../../middlewares/multer");
 class CarService {
     getAllCars(res_1, category_1, name_1) {
@@ -79,7 +79,7 @@ class CarService {
                 throw new Error('Only image files (JPG, PNG, GIF) are allowed');
             }
             const token = req.headers.authorization;
-            const username = token ? yield (0, jwt_1.getUsernameFromToken)(token) : 'unknown';
+            const username = token ? yield (0, jwtUtils_1.getUsernameFromToken)(token) : 'unknown';
             if (!username) {
                 throw new Error('Failed to get username from token');
             }
@@ -87,7 +87,7 @@ class CarService {
             const file = `data:${req.file.mimetype};base64,${fileBase64}`;
             return new Promise((resolve, reject) => {
                 const uniqueFileName = (0, multer_1.generateUniqueFileName)(file);
-                cloudinary_1.default.uploader.upload(file, { folder: 'challenge_5', public_id: uniqueFileName }, (error, result) => __awaiter(this, void 0, void 0, function* () {
+                cloudinaryConfig_1.default.uploader.upload(file, { folder: 'challenge_5', public_id: uniqueFileName }, (error, result) => __awaiter(this, void 0, void 0, function* () {
                     if (error) {
                         reject(new Error(error.message));
                         return;
@@ -129,7 +129,7 @@ class CarService {
                     return null;
                 }
                 const token = req.headers.authorization;
-                const username = token ? yield (0, jwt_1.getUsernameFromToken)(token) : 'unknown';
+                const username = token ? yield (0, jwtUtils_1.getUsernameFromToken)(token) : 'unknown';
                 if (!username) {
                     throw new Error('Failed to get username from token');
                 }
@@ -139,9 +139,9 @@ class CarService {
                     const uniqueFileName = (0, multer_1.generateUniqueFileName)(file);
                     const publicId = (0, multer_1.extractPublicId)(existingCar.image);
                     if (publicId) {
-                        yield cloudinary_1.default.uploader.destroy(publicId);
+                        yield cloudinaryConfig_1.default.uploader.destroy(publicId);
                     }
-                    const result = yield cloudinary_1.default.uploader.upload(file, {
+                    const result = yield cloudinaryConfig_1.default.uploader.upload(file, {
                         folder: 'challenge_5',
                         public_id: uniqueFileName,
                     });
@@ -168,7 +168,7 @@ class CarService {
                     return;
                 }
                 const token = req.headers.authorization;
-                const username = token ? yield (0, jwt_1.getUsernameFromToken)(token) : 'unknown';
+                const username = token ? yield (0, jwtUtils_1.getUsernameFromToken)(token) : 'unknown';
                 const updatedCar = yield carsRepository_1.default.updateCar(carId, {
                     deletedBy: username,
                     updatedAt: new Date(),
@@ -177,7 +177,7 @@ class CarService {
                     (0, responseHandler_1.wrapErrorResponse)(res, 200, 'Car deleted successfully');
                 }
                 else {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Failed to delete car');
+                    (0, responseHandler_1.wrapErrorResponse)(res, 400, 'Failed to delete car');
                 }
             }
             catch (error) {

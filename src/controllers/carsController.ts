@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
 import carService from '../services/cars/carsServices';
-import { wrapResponse, wrapErrorResponse } from '../utils/responseHandler';
+import {
+  wrapResponse,
+  wrapErrorResponse,
+  handleNotFoundError,
+  handleInternalServerError,
+} from '../utils/responseHandler';
 
 class CarController {
   async getAllCars(req: Request, res: Response): Promise<void> {
@@ -12,7 +17,7 @@ class CarController {
       await carService.getAllCars(res, category, name, page, pageSize);
     } catch (error) {
       console.error('Error getting cars:', error);
-      wrapErrorResponse(res, 500, 'Internal Server Error');
+      handleInternalServerError(res, 'Internal Server Error');
     }
   }
 
@@ -27,11 +32,11 @@ class CarController {
       if (newCar) {
         wrapResponse(res, 201, 'Data Berhasil Disimpan', newCar);
       } else {
-        wrapResponse(res, 500, 'Failed to create car', newCar);
+        wrapErrorResponse(res, 500, 'Failed to create car');
       }
     } catch (error) {
       console.error(error);
-      wrapErrorResponse(res, 500, 'Internal Server Error');
+      handleInternalServerError(res, 'Internal Server Error');
     }
   }
 
@@ -41,11 +46,11 @@ class CarController {
       if (updatedCar) {
         wrapResponse(res, 200, 'Car updated successfully', updatedCar);
       } else {
-        wrapErrorResponse(res, 404, 'Car with the specified ID not found');
+        handleNotFoundError(res, 'Car with the specified ID not found');
       }
     } catch (error) {
       console.error(error);
-      wrapErrorResponse(res, 500, 'Internal Server Error');
+      handleInternalServerError(res, 'Internal Server Error');
     }
   }
 

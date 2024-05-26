@@ -1,11 +1,16 @@
 import { IUsersRepository } from './usersRepositoryInterface';
 import { UsersModel } from '../../db/models/usersModel';
-import { UserCurrentDto } from '../../dto/users/usersCurrentDto';
 import { RolesModel } from '../../db/models/rolesModel';
 
 export class UsersRepository implements IUsersRepository {
   async findById(id: string): Promise<UsersModel | undefined> {
     return UsersModel.query().findById(id);
+  }
+
+  async findRoleById(
+    roleId: string
+  ): Promise<{ userRole: string } | undefined> {
+    return RolesModel.query().findById(roleId);
   }
 
   async findByEmail(email: string): Promise<UsersModel | undefined> {
@@ -17,7 +22,7 @@ export class UsersRepository implements IUsersRepository {
   }
 
   async findAllUsersWithRoles(): Promise<
-    (UsersModel & { role?: { userRole: string } | undefined })[]
+    (UsersModel & { role?: { userRole: string } })[]
   > {
     const users = await UsersModel.query();
     const usersWithRoles = await Promise.all(

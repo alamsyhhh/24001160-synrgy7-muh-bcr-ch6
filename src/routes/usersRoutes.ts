@@ -1,6 +1,9 @@
 import express, { Router } from 'express';
 import { UsersController } from '../controllers/usersController';
-import { authenticateToken, authorizeRoles } from '../middlewares/auth';
+import {
+  authenticateToken,
+  authorizeRoles,
+} from '../middlewares/authMiddlewares';
 import multer from 'multer';
 
 const router: Router = express.Router();
@@ -10,7 +13,6 @@ const upload = multer();
 
 router.post('/register', upload.none(), usersController.registerUser);
 router.post('/login', upload.none(), usersController.loginUser);
-
 router.get('/current-user', authenticateToken, usersController.getCurrentUser);
 
 router.get(
@@ -20,7 +22,6 @@ router.get(
   usersController.getAllUsers
 );
 
-// Menggunakan path parameter (:userId)
 router.put(
   '/users/:userId/role',
   authenticateToken,

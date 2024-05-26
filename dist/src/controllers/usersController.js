@@ -14,10 +14,11 @@ const responseHandler_1 = require("../utils/responseHandler");
 const usersServices_1 = require("../services/users/usersServices");
 const usersRepository_1 = require("../repositories/users/usersRepository");
 const objection_1 = require("objection");
+const bcryptUtils_1 = require("../utils/bcryptUtils");
 class UsersController {
     constructor() {
         const usersRepository = new usersRepository_1.UsersRepository();
-        this.usersService = new usersServices_1.UsersService(usersRepository);
+        this.usersService = new usersServices_1.UsersService(usersRepository, bcryptUtils_1.hashPassword, bcryptUtils_1.comparePassword);
         this.registerUser = this.registerUser.bind(this);
         this.loginUser = this.loginUser.bind(this);
         this.updateUserRole = this.updateUserRole.bind(this);
@@ -34,13 +35,10 @@ class UsersController {
             catch (error) {
                 console.error('Error registering user:', error);
                 if (error instanceof objection_1.ValidationError) {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 400, error.message);
-                }
-                else if (error instanceof Error) {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, error.message);
+                    (0, responseHandler_1.handleBadRequestError)(res, error.message);
                 }
                 else {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Internal server error');
+                    (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
                 }
             }
         });
@@ -53,15 +51,12 @@ class UsersController {
                 (0, responseHandler_1.wrapResponse)(res, 200, 'Login Success', result);
             }
             catch (error) {
-                console.error('Error logging in user:', error);
+                // console.error('Error logging in user:', error);
                 if (error instanceof objection_1.ValidationError) {
                     (0, responseHandler_1.wrapErrorResponse)(res, 400, error.message);
                 }
-                else if (error instanceof Error) {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, error.message);
-                }
                 else {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Internal server error');
+                    (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
                 }
             }
         });
@@ -75,17 +70,12 @@ class UsersController {
                     (0, responseHandler_1.wrapResponse)(res, 200, 'User fetched successfully', { user: userDto });
                 }
                 else {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 404, 'User not found');
+                    (0, responseHandler_1.handleNotFoundError)(res, 'User not found');
                 }
             }
             catch (error) {
                 console.error('Error fetching current user:', error);
-                if (error instanceof Error) {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, error.message);
-                }
-                else {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Internal server error');
-                }
+                (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
             }
         });
     }
@@ -97,12 +87,7 @@ class UsersController {
             }
             catch (error) {
                 console.error('Error fetching all users:', error);
-                if (error instanceof Error) {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, error.message);
-                }
-                else {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Internal server error');
-                }
+                (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
             }
         });
     }
@@ -119,11 +104,8 @@ class UsersController {
                 if (error instanceof objection_1.ValidationError) {
                     (0, responseHandler_1.wrapErrorResponse)(res, 400, error.message);
                 }
-                else if (error instanceof Error) {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, error.message);
-                }
                 else {
-                    (0, responseHandler_1.wrapErrorResponse)(res, 500, 'Internal server error');
+                    (0, responseHandler_1.handleInternalServerError)(res, 'Internal Server Error');
                 }
             }
         });

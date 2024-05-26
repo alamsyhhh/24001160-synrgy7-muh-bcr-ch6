@@ -16,11 +16,12 @@ exports.authorizeRoles = exports.authenticateToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const usersModel_1 = require("../db/models/usersModel");
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config(); // Load environment variables from .env file
+const responseHandler_1 = require("../utils/responseHandler");
+dotenv_1.default.config();
 const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Access Token Required' });
+        return (0, responseHandler_1.handleErrorResponse)(res, 401, 'Access Token Required');
     }
     const token = authHeader.split(' ')[1].trim();
     try {
@@ -28,32 +29,26 @@ const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         if (!secretKey) {
             throw new Error('JWT_SECRET is not defined');
         }
-        // console.log('Token:', token);
-        // console.log('Secret key:', secretKey);
         const decoded = jsonwebtoken_1.default.verify(token, secretKey);
-        // console.log('Decoded token:', decoded);
         if (!decoded.id) {
             throw new Error('Token does not contain user ID');
         }
         const user = yield usersModel_1.UsersModel.query().findById(decoded.id);
         if (!user) {
-            return res.status(403).json({ message: 'User not found' });
+            return (0, responseHandler_1.handleErrorResponse)(res, 403, 'User not found');
         }
         req.user = user;
         next();
     }
     catch (err) {
-        // console.error('Error verifying token:', err);
-        return res.status(403).json({ message: 'Invalid Access Token' });
+        return (0, responseHandler_1.handleErrorResponse)(res, 403, 'Invalid Access Token');
     }
 });
 exports.authenticateToken = authenticateToken;
 const authorizeRoles = (...roles) => {
     return (req, res, next) => {
-        // console.log('User Role:', req.user?.roleId);
-        // console.log('Authorized Roles:', roles);
         if (!req.user || !roles.includes(req.user.roleId)) {
-            return res.status(403).json({ message: 'Access Denied' });
+            return (0, responseHandler_1.handleErrorResponse)(res, 403, 'Access Denied');
         }
         next();
     };
