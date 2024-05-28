@@ -1,6 +1,6 @@
-import { CarsModel, Cars } from '../../db/models/carsModel';
-import { ICarRepository } from './carsRepositoryInterface';
-import { CarDTO } from '../../dto/cars/carsDto';
+import { CarsModel } from '../../../db/models/carsModel';
+import { ICarRepository } from './carsAdminRepositoryInterface';
+import { CarDTO } from '../../../dto/cars/carsDto';
 
 class CarRepository implements ICarRepository {
   async getAllCars(
@@ -9,7 +9,7 @@ class CarRepository implements ICarRepository {
     page?: number,
     pageSize?: number
   ): Promise<CarDTO[]> {
-    const query = CarsModel.query().whereNull('deletedBy');
+    const query = CarsModel.query();
 
     if (category) {
       const categoryLowerCase = category.toLowerCase();
@@ -26,19 +26,26 @@ class CarRepository implements ICarRepository {
       query.offset(offset).limit(pageSize);
     }
 
-    return query;
+    const cars = await query;
+    return cars.map((car) => car as CarDTO);
   }
 
   async getCarById(carId: string): Promise<CarDTO | undefined> {
-    return CarsModel.query().findById(carId);
+    const car = await CarsModel.query().findById(carId);
+    return car ? (car as CarDTO) : undefined;
   }
 
   async createCar(carData: Partial<CarDTO>): Promise<CarDTO> {
-    return CarsModel.query().insert(carData);
+    const newCar = await CarsModel.query().insert(carData);
+    return newCar as CarDTO;
   }
 
   async updateCar(carId: string, carData: Partial<CarDTO>): Promise<CarDTO> {
-    return CarsModel.query().patchAndFetchById(carId, carData);
+    const updatedCar = await CarsModel.query().patchAndFetchById(
+      carId,
+      carData
+    );
+    return updatedCar as CarDTO;
   }
 
   async deleteCarById(carId: string): Promise<number> {
@@ -46,7 +53,7 @@ class CarRepository implements ICarRepository {
   }
 
   async getTotalCount(category?: string, name?: string): Promise<number> {
-    const query = CarsModel.query().whereNull('deletedBy');
+    const query = CarsModel.query();
 
     if (category) {
       const categoryLowerCase = category.toLowerCase();

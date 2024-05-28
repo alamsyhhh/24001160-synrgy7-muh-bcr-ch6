@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
-import carService from '../services/cars/carsServices';
+import carService from '../../services/cars/carsAdmin/carsAdminServices';
 import {
   wrapResponse,
   wrapErrorResponse,
   handleNotFoundError,
   handleBadRequestError,
   handleInternalServerError,
-} from '../utils/responseHandler';
+} from '../../utils/responseHandler';
 
-class CarController {
+class CarsAdminController {
   async getAllCars(req: Request, res: Response): Promise<void> {
     try {
       const category = req.query.category as string | undefined;
@@ -79,4 +79,4 @@ class CarController {
   }
 }
 
-export default new CarController();
+export default new CarsAdminController();

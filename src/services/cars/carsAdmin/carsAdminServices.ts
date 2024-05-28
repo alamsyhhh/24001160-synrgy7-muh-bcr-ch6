@@ -1,16 +1,20 @@
 import { Request, Response } from 'express';
-import { CarDTO } from '../../dto/cars/carsDto';
-import carRepository from '../../repositories/cars/carsRepository';
-import { ICarService } from './carsServiceInterface';
-import { wrapResponse, wrapErrorResponse } from '../../utils/responseHandler';
+import { CarDTO } from '../../../dto/cars/carsDto';
+
+import { ICarService } from './carsAdminServiceInterface';
+import {
+  wrapResponse,
+  wrapErrorResponse,
+} from '../../../utils/responseHandler';
 import { v4 as uuidv4 } from 'uuid';
-import cloudinary from '../../../config/cloudinaryConfig';
-import { getUsernameFromToken } from '../../utils/jwtUtils';
+import cloudinary from '../../../../config/cloudinaryConfig';
+import { getUsernameFromToken } from '../../../utils/jwtUtils';
 
 import {
   generateUniqueFileName,
   extractPublicId,
-} from '../../middlewares/multer';
+} from '../../../middlewares/multer';
+import carsRepository from '../../../repositories/cars/carsAdmin/carsAdminRepository';
 
 class CarService implements ICarService {
   async getAllCars(
@@ -23,7 +27,7 @@ class CarService implements ICarService {
     try {
       let cars: CarDTO[];
       if (category || name || pageSize !== -1) {
-        cars = await carRepository.getAllCars(category, name, page, pageSize);
+        cars = await carsRepository.getAllCars(category, name, page, pageSize);
         if (cars.length === 0) {
           wrapErrorResponse(
             res,
@@ -33,7 +37,7 @@ class CarService implements ICarService {
           return;
         }
 
-        const totalCount = await carRepository.getTotalCount(category, name);
+        const totalCount = await carsRepository.getTotalCount(category, name);
         const totalPages =
           pageSize !== -1 ? Math.ceil(totalCount / pageSize) : 1;
 
@@ -42,7 +46,7 @@ class CarService implements ICarService {
           totalPages,
         });
       } else {
-        cars = await carRepository.getAllCars();
+        cars = await carsRepository.getAllCars();
         if (cars.length === 0) {
           wrapErrorResponse(res, 404, 'No cars found');
         } else {
@@ -57,7 +61,7 @@ class CarService implements ICarService {
 
   async getCarById(res: Response, carId: string): Promise<void> {
     try {
-      const car = await carRepository.getCarById(carId);
+      const car = await carsRepository.getCarById(carId);
       if (!car) {
         wrapErrorResponse(res, 404, 'Car with the specified ID not found');
       } else {
@@ -121,6 +125,7 @@ class CarService implements ICarService {
               image: imageUrl,
               startRent: startRent ? new Date(startRent) : null,
               finishRent: finishRent ? new Date(finishRent) : null,
+              onPublish: false,
               createdBy: username,
               updatedBy: username,
               deletedBy: null,
@@ -128,7 +133,7 @@ class CarService implements ICarService {
               updatedAt: new Date(),
             };
 
-            const createdCar = await carRepository.createCar(newCar);
+            const createdCar = await carsRepository.createCar(newCar);
             resolve(createdCar);
           } catch (err) {
             console.error(err);
@@ -144,7 +149,7 @@ class CarService implements ICarService {
     const { name, price, category, startRent, finishRent } = req.body;
 
     try {
-      const existingCar = await carRepository.getCarById(carId);
+      const existingCar = await carsRepository.getCarById(carId);
       if (!existingCar) {
         return null;
       }
@@ -186,11 +191,12 @@ class CarService implements ICarService {
         category,
         startRent: startRent ? new Date(startRent) : null,
         finishRent: finishRent ? new Date(finishRent) : null,
+        onPublish: false,
         updatedBy: username,
         updatedAt: new Date(),
       };
 
-      const updatedCarResult = await carRepository.updateCar(carId, updatedCar);
+      const updatedCarResult = await carsRepository.updateCar(carId, updatedCar);
       return updatedCarResult;
     } catch (error) {
       console.error('Error updating car:', error);
@@ -204,7 +210,7 @@ class CarService implements ICarService {
     carId: string
   ): Promise<void> {
     try {
-      const car = await carRepository.getCarById(carId);
+      const car = await carsRepository.getCarById(carId);
       if (!car) {
         wrapErrorResponse(res, 404, 'Car with the specified ID not found');
         return;
@@ -213,7 +219,7 @@ class CarService implements ICarService {
       const token = req.headers.authorization;
       const username = token ? await getUsernameFromToken(token) : 'unknown';
 
-      const updatedCar = await carRepository.updateCar(carId, {
+      const updatedCar = await carsRepository.updateCar(carId, {
         deletedBy: username,
         updatedAt: new Date(),
       });

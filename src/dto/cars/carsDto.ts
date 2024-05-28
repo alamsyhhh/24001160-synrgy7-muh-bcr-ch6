@@ -4,6 +4,7 @@ export interface CarDTO {
   category: string;
   price: number;
   image: string;
+  onPublish: boolean;
   startRent?: Date | null;
   finishRent?: Date | null;
   createdBy: string;

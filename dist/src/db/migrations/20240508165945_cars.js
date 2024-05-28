@@ -18,6 +18,7 @@ function up(knex) {
             table.string('category').notNullable();
             table.float('price').notNullable();
             table.string('image').notNullable();
+            table.boolean('onPublish').defaultTo(false);
             table.date('startRent');
             table.date('finishRent');
             table.string('createdBy').notNullable();

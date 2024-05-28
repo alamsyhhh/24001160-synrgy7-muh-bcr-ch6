@@ -14,12 +14,11 @@ const apidocs_json_1 = __importDefault(require("../apidocs.json"));
 objection_1.Model.knex(postgresConfig_1.knexInstance);
 const PORT = 9000;
 const app = (0, express_1.default)();
-app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(apidocs_json_1.default));
-const cv1 = '/api/v1/cms';
-const v1 = '/api/v1';
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use(`${cv1}`, carsRoutes_1.carRoutes, errorUploadHandlingMiddleware_1.default);
+const v1 = '/api/v1';
+app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(apidocs_json_1.default));
+app.use(`${v1}`, carsRoutes_1.carRoutes, errorUploadHandlingMiddleware_1.default);
 app.use(`${v1}`, usersRoutes_1.userRoutes);
 app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);

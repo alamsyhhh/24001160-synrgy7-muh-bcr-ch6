@@ -7,6 +7,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('category').notNullable();
     table.float('price').notNullable();
     table.string('image').notNullable();
+    table.boolean('onPublish').defaultTo(false);
     table.date('startRent');
     table.date('finishRent');
     table.string('createdBy').notNullable();

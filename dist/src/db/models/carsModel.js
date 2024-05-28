@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CarsModel = void 0;
 const objection_1 = require("objection");
 class CarsModel extends objection_1.Model {
+    constructor() {
+        super(...arguments);
+        this.onPublish = false;
+    }
     static get tableName() {
         return 'cars';
     }

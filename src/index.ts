@@ -12,16 +12,14 @@ Model.knex(knexInstance);
 const PORT = 9000;
 const app: Express = express();
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apidocs));
-
-const cv1 = '/api/v1/cms';
-const v1 = '/api/v1';
-
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
 
-app.use(`${cv1}`, carRoutes, errorHandlingMiddleware);
+const v1 = '/api/v1';
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apidocs));
+
+app.use(`${v1}`, carRoutes, errorHandlingMiddleware);
 app.use(`${v1}`, userRoutes);
 
 app.listen(PORT, () => {

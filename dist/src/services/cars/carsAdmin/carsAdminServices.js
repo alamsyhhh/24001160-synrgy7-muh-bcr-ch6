@@ -12,24 +12,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const carsRepository_1 = __importDefault(require("../../repositories/cars/carsRepository"));
-const responseHandler_1 = require("../../utils/responseHandler");
+const responseHandler_1 = require("../../../utils/responseHandler");
 const uuid_1 = require("uuid");
-const cloudinaryConfig_1 = __importDefault(require("../../../config/cloudinaryConfig"));
-const jwtUtils_1 = require("../../utils/jwtUtils");
-const multer_1 = require("../../middlewares/multer");
+const cloudinaryConfig_1 = __importDefault(require("../../../../config/cloudinaryConfig"));
+const jwtUtils_1 = require("../../../utils/jwtUtils");
+const multer_1 = require("../../../middlewares/multer");
+const carsAdminRepository_1 = __importDefault(require("../../../repositories/cars/carsAdmin/carsAdminRepository"));
 class CarService {
     getAllCars(res_1, category_1, name_1) {
         return __awaiter(this, arguments, void 0, function* (res, category, name, page = 1, pageSize = -1) {
             try {
                 let cars;
                 if (category || name || pageSize !== -1) {
-                    cars = yield carsRepository_1.default.getAllCars(category, name, page, pageSize);
+                    cars = yield carsAdminRepository_1.default.getAllCars(category, name, page, pageSize);
                     if (cars.length === 0) {
                         (0, responseHandler_1.wrapErrorResponse)(res, 404, 'No cars found with the specified criteria');
                         return;
                     }
-                    const totalCount = yield carsRepository_1.default.getTotalCount(category, name);
+                    const totalCount = yield carsAdminRepository_1.default.getTotalCount(category, name);
                     const totalPages = pageSize !== -1 ? Math.ceil(totalCount / pageSize) : 1;
                     (0, responseHandler_1.wrapResponse)(res, 200, 'Get all car data successfully', {
                         data: cars,
@@ -37,7 +37,7 @@ class CarService {
                     });
                 }
                 else {
-                    cars = yield carsRepository_1.default.getAllCars();
+                    cars = yield carsAdminRepository_1.default.getAllCars();
                     if (cars.length === 0) {
                         (0, responseHandler_1.wrapErrorResponse)(res, 404, 'No cars found');
                     }
@@ -55,7 +55,7 @@ class CarService {
     getCarById(res, carId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const car = yield carsRepository_1.default.getCarById(carId);
+                const car = yield carsAdminRepository_1.default.getCarById(carId);
                 if (!car) {
                     (0, responseHandler_1.wrapErrorResponse)(res, 404, 'Car with the specified ID not found');
                 }
@@ -115,7 +115,7 @@ class CarService {
                             createdAt: new Date(),
                             updatedAt: new Date(),
                         };
-                        const createdCar = yield carsRepository_1.default.createCar(newCar);
+                        const createdCar = yield carsAdminRepository_1.default.createCar(newCar);
                         resolve(createdCar);
                     }
                     catch (err) {
@@ -131,7 +131,7 @@ class CarService {
             const carId = req.params.id;
             const { name, price, category, startRent, finishRent } = req.body;
             try {
-                const existingCar = yield carsRepository_1.default.getCarById(carId);
+                const existingCar = yield carsAdminRepository_1.default.getCarById(carId);
                 if (!existingCar) {
                     return null;
                 }
@@ -160,7 +160,7 @@ class CarService {
                 const updatedCar = Object.assign(Object.assign({}, existingCar), { name,
                     price,
                     category, startRent: startRent ? new Date(startRent) : null, finishRent: finishRent ? new Date(finishRent) : null, onPublish: false, updatedBy: username, updatedAt: new Date() });
-                const updatedCarResult = yield carsRepository_1.default.updateCar(carId, updatedCar);
+                const updatedCarResult = yield carsAdminRepository_1.default.updateCar(carId, updatedCar);
                 return updatedCarResult;
             }
             catch (error) {
@@ -172,14 +172,14 @@ class CarService {
     deleteCarById(req, res, carId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const car = yield carsRepository_1.default.getCarById(carId);
+                const car = yield carsAdminRepository_1.default.getCarById(carId);
                 if (!car) {
                     (0, responseHandler_1.wrapErrorResponse)(res, 404, 'Car with the specified ID not found');
                     return;
                 }
                 const token = req.headers.authorization;
                 const username = token ? yield (0, jwtUtils_1.getUsernameFromToken)(token) : 'unknown';
-                const updatedCar = yield carsRepository_1.default.updateCar(carId, {
+                const updatedCar = yield carsAdminRepository_1.default.updateCar(carId, {
                     deletedBy: username,
                     updatedAt: new Date(),
                 });

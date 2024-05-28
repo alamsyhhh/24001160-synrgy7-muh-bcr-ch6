@@ -12,8 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const carsServices_1 = __importDefault(require("../services/cars/carsAdmin/carsServices"));
-const responseHandler_1 = require("../utils/responseHandler");
+const carsServices_1 = __importDefault(require("../../services/cars/carsAdmin/carsServices"));
+const responseHandler_1 = require("../../utils/responseHandler");
 class CarController {
     getAllCars(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

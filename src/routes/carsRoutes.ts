@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
-import carController from '../controllers/carsController';
+import carsAdminController from '../controllers/cars/carsAdminController';
+import carsUsersController from '../controllers/cars/carsUsersController';
 import upload from '../middlewares/multer';
 import {
   authenticateToken,
@@ -8,37 +9,40 @@ import {
 
 const router: Router = express.Router();
 
+router.get('/cars', carsUsersController.getAllCars);
+router.get('/cars/:id', carsUsersController.getCarById);
+
 router.get(
-  '/cars',
+  '/cms/cars',
   authenticateToken,
   authorizeRoles('2', '3'),
-  carController.getAllCars
+  carsAdminController.getAllCars
 );
 router.get(
-  '/cars/:id',
+  '/cms/cars/:id',
   authenticateToken,
   authorizeRoles('2', '3'),
-  carController.getCarById
+  carsAdminController.getCarById
 );
 router.post(
-  '/cars',
+  '/cms/cars',
   authenticateToken,
   authorizeRoles('2', '3'),
   upload.single('image'),
-  carController.createCar
+  carsAdminController.createCar
 );
 router.put(
-  '/cars/:id',
+  '/cms/cars/:id',
   authenticateToken,
   authorizeRoles('2', '3'),
   upload.single('image'),
-  carController.updateCar
+  carsAdminController.updateCar
 );
 router.delete(
-  '/cars/:id',
+  '/cms/cars/:id',
   authenticateToken,
   authorizeRoles('2', '3'),
-  carController.deleteCar
+  carsAdminController.deleteCar
 );
 
 export { router as carRoutes };

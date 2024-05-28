@@ -12,6 +12,7 @@ export async function seed(knex: Knex): Promise<void> {
       price: 10000,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'true',
       createdBy: 'admin',
       updatedBy: 'admin',
       createdAt: new Date(),
@@ -24,8 +25,10 @@ export async function seed(knex: Knex): Promise<void> {
       price: 100.05,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'false',
       createdBy: 'admin',
       updatedBy: 'admin',
+      deletedBy: 'firman',
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -36,6 +39,7 @@ export async function seed(knex: Knex): Promise<void> {
       price: 20000,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'true',
       createdBy: 'admin',
       updatedBy: 'admin',
       createdAt: new Date(),
@@ -48,8 +52,10 @@ export async function seed(knex: Knex): Promise<void> {
       price: 30000,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'false',
       createdBy: 'admin',
       updatedBy: 'admin',
+      deletedBy: 'rizki',
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -60,6 +66,7 @@ export async function seed(knex: Knex): Promise<void> {
       price: 400.05,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'true',
       createdBy: 'admin',
       updatedBy: 'admin',
       createdAt: new Date(),
@@ -72,8 +79,11 @@ export async function seed(knex: Knex): Promise<void> {
       price: 50.05,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'false',
       createdBy: 'admin',
       updatedBy: 'admin',
+      startRent: '2012/03/05',
+      finishRent: '2012/03/10',
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -84,6 +94,7 @@ export async function seed(knex: Knex): Promise<void> {
       price: 500000,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'true',
       createdBy: 'admin',
       updatedBy: 'admin',
       createdAt: new Date(),
@@ -96,6 +107,7 @@ export async function seed(knex: Knex): Promise<void> {
       price: 30000,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'false',
       createdBy: 'admin',
       updatedBy: 'admin',
       createdAt: new Date(),
@@ -108,6 +120,7 @@ export async function seed(knex: Knex): Promise<void> {
       price: 30000,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'true',
       createdBy: 'admin',
       updatedBy: 'admin',
       createdAt: new Date(),
@@ -120,6 +133,7 @@ export async function seed(knex: Knex): Promise<void> {
       price: 40000,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'false',
       createdBy: 'admin',
       updatedBy: 'admin',
       createdAt: new Date(),
@@ -132,6 +146,7 @@ export async function seed(knex: Knex): Promise<void> {
       price: 4000000,
       image:
         'https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png',
+      onPublish: 'true',
       createdBy: 'admin',
       updatedBy: 'admin',
       createdAt: new Date(),

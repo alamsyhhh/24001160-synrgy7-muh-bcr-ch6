@@ -8,6 +8,7 @@ export class CarsModel extends Model {
   image!: string;
   startRent?: Date | null;
   finishRent?: Date | null;
+  onPublish: boolean = false;
   createdBy!: string;
   updatedBy!: string;
   deletedBy?: string | null;

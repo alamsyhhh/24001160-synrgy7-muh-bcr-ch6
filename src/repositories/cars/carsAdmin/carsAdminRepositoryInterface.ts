@@ -1,4 +1,4 @@
-import { Cars } from '../../db/models/carsModel';
+import { Cars } from '../../../db/models/carsModel';
 
 export interface ICarRepository {
   getAllCars(
