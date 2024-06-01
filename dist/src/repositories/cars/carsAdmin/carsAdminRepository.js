@@ -27,14 +27,31 @@ class CarRepository {
                 query.offset(offset).limit(pageSize);
             }
             const cars = yield query;
-            return cars.map((car) => car);
+            return cars.map(this.mapToCarDTO);
         });
     }
     getCarById(carId) {
         return __awaiter(this, void 0, void 0, function* () {
             const car = yield carsModel_1.CarsModel.query().findById(carId);
-            return car ? car : undefined;
+            return car ? this.mapToCarDTO(car) : undefined;
         });
+    }
+    mapToCarDTO(car) {
+        return {
+            id: car.id,
+            name: car.name,
+            category: car.category,
+            price: car.price,
+            image: car.image,
+            onPublish: car.onPublish,
+            startRent: car.startRent,
+            finishRent: car.finishRent,
+            createdBy: car.createdBy,
+            updatedBy: car.updatedBy,
+            deletedBy: car.deletedBy,
+            createdAt: car.createdAt,
+            updatedAt: car.updatedAt,
+        };
     }
     createCar(carData) {
         return __awaiter(this, void 0, void 0, function* () {

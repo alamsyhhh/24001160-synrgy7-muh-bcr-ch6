@@ -27,12 +27,30 @@ class CarRepository implements ICarRepository {
     }
 
     const cars = await query;
-    return cars.map((car) => car as CarDTO);
+    return cars.map(this.mapToCarDTO);
   }
 
   async getCarById(carId: string): Promise<CarDTO | undefined> {
     const car = await CarsModel.query().findById(carId);
-    return car ? (car as CarDTO) : undefined;
+    return car ? this.mapToCarDTO(car) : undefined;
+  }
+
+  private mapToCarDTO(car: any): CarDTO {
+    return {
+      id: car.id,
+      name: car.name,
+      category: car.category,
+      price: car.price,
+      image: car.image,
+      onPublish: car.onPublish,
+      startRent: car.startRent,
+      finishRent: car.finishRent,
+      createdBy: car.createdBy,
+      updatedBy: car.updatedBy,
+      deletedBy: car.deletedBy,
+      createdAt: car.createdAt,
+      updatedAt: car.updatedAt,
+    };
   }
 
   async createCar(carData: Partial<CarDTO>): Promise<CarDTO> {

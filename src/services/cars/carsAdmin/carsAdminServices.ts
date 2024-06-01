@@ -196,7 +196,10 @@ class CarService implements ICarService {
         updatedAt: new Date(),
       };
 
-      const updatedCarResult = await carsRepository.updateCar(carId, updatedCar);
+      const updatedCarResult = await carsRepository.updateCar(
+        carId,
+        updatedCar
+      );
       return updatedCarResult;
     } catch (error) {
       console.error('Error updating car:', error);
