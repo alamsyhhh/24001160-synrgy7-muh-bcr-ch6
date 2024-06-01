@@ -3,6 +3,24 @@ import { ICarRepository } from './carsAdminRepositoryInterface';
 import { CarDTO } from '../../../dto/cars/carsDto';
 
 class CarRepository implements ICarRepository {
+  private mapToCarDTO(car: any): CarDTO {
+    return {
+      id: car.id,
+      name: car.name,
+      category: car.category,
+      price: car.price,
+      image: car.image,
+      onPublish: car.onPublish,
+      startRent: car.startRent,
+      finishRent: car.finishRent,
+      createdBy: car.createdBy,
+      updatedBy: car.updatedBy,
+      deletedBy: car.deletedBy,
+      createdAt: car.createdAt,
+      updatedAt: car.updatedAt,
+    };
+  }
+
   async getAllCars(
     category?: string,
     name?: string,
@@ -35,27 +53,9 @@ class CarRepository implements ICarRepository {
     return car ? this.mapToCarDTO(car) : undefined;
   }
 
-  private mapToCarDTO(car: any): CarDTO {
-    return {
-      id: car.id,
-      name: car.name,
-      category: car.category,
-      price: car.price,
-      image: car.image,
-      onPublish: car.onPublish,
-      startRent: car.startRent,
-      finishRent: car.finishRent,
-      createdBy: car.createdBy,
-      updatedBy: car.updatedBy,
-      deletedBy: car.deletedBy,
-      createdAt: car.createdAt,
-      updatedAt: car.updatedAt,
-    };
-  }
-
   async createCar(carData: Partial<CarDTO>): Promise<CarDTO> {
     const newCar = await CarsModel.query().insert(carData);
-    return newCar as CarDTO;
+    return this.mapToCarDTO(newCar);
   }
 
   async updateCar(carId: string, carData: Partial<CarDTO>): Promise<CarDTO> {
@@ -63,7 +63,7 @@ class CarRepository implements ICarRepository {
       carId,
       carData
     );
-    return updatedCar as CarDTO;
+    return this.mapToCarDTO(updatedCar);
   }
 
   async deleteCarById(carId: string): Promise<number> {

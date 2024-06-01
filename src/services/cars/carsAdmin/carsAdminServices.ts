@@ -125,7 +125,7 @@ class CarService implements ICarService {
               image: imageUrl,
               startRent: startRent ? new Date(startRent) : null,
               finishRent: finishRent ? new Date(finishRent) : null,
-              onPublish: false,
+              onPublish: true,
               createdBy: username,
               updatedBy: username,
               deletedBy: null,
@@ -162,6 +162,7 @@ class CarService implements ICarService {
       }
 
       if (isNaN(price) || price <= 0) {
+        console.log(price);
         throw new Error('Price must be a positive number');
       }
 
@@ -223,6 +224,7 @@ class CarService implements ICarService {
       const username = token ? await getUsernameFromToken(token) : 'unknown';
 
       const updatedCar = await carsRepository.updateCar(carId, {
+        onPublish: false,
         deletedBy: username,
         updatedAt: new Date(),
       });

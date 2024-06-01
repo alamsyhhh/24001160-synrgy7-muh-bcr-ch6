@@ -108,7 +108,7 @@ class CarService {
                             image: imageUrl,
                             startRent: startRent ? new Date(startRent) : null,
                             finishRent: finishRent ? new Date(finishRent) : null,
-                            onPublish: false,
+                            onPublish: true,
                             createdBy: username,
                             updatedBy: username,
                             deletedBy: null,
@@ -141,6 +141,7 @@ class CarService {
                     throw new Error('Failed to get username from token');
                 }
                 if (isNaN(price) || price <= 0) {
+                    console.log(price);
                     throw new Error('Price must be a positive number');
                 }
                 if (req.file) {
@@ -180,6 +181,7 @@ class CarService {
                 const token = req.headers.authorization;
                 const username = token ? yield (0, jwtUtils_1.getUsernameFromToken)(token) : 'unknown';
                 const updatedCar = yield carsAdminRepository_1.default.updateCar(carId, {
+                    onPublish: false,
                     deletedBy: username,
                     updatedAt: new Date(),
                 });

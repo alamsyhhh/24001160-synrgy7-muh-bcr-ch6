@@ -11,6 +11,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const carsModel_1 = require("../../../db/models/carsModel");
 class CarRepository {
+    mapToCarDTO(car) {
+        return {
+            id: car.id,
+            name: car.name,
+            category: car.category,
+            price: car.price,
+            image: car.image,
+            onPublish: car.onPublish,
+            startRent: car.startRent,
+            finishRent: car.finishRent,
+            createdBy: car.createdBy,
+            updatedBy: car.updatedBy,
+            deletedBy: car.deletedBy,
+            createdAt: car.createdAt,
+            updatedAt: car.updatedAt,
+        };
+    }
     getAllCars(category, name, page, pageSize) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = carsModel_1.CarsModel.query();
@@ -36,33 +53,16 @@ class CarRepository {
             return car ? this.mapToCarDTO(car) : undefined;
         });
     }
-    mapToCarDTO(car) {
-        return {
-            id: car.id,
-            name: car.name,
-            category: car.category,
-            price: car.price,
-            image: car.image,
-            onPublish: car.onPublish,
-            startRent: car.startRent,
-            finishRent: car.finishRent,
-            createdBy: car.createdBy,
-            updatedBy: car.updatedBy,
-            deletedBy: car.deletedBy,
-            createdAt: car.createdAt,
-            updatedAt: car.updatedAt,
-        };
-    }
     createCar(carData) {
         return __awaiter(this, void 0, void 0, function* () {
             const newCar = yield carsModel_1.CarsModel.query().insert(carData);
-            return newCar;
+            return this.mapToCarDTO(newCar);
         });
     }
     updateCar(carId, carData) {
         return __awaiter(this, void 0, void 0, function* () {
             const updatedCar = yield carsModel_1.CarsModel.query().patchAndFetchById(carId, carData);
-            return updatedCar;
+            return this.mapToCarDTO(updatedCar);
         });
     }
     deleteCarById(carId) {

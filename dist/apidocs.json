@@ -22,6 +22,89 @@
                 "scheme": "bearer",
                 "bearerFormat": "JWT"
             }
+        },
+        "schemas": {
+            "cars": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "onPublish": {
+                        "type": "boolean"
+                    },
+                    "starRent": {
+                        "type": "date"
+                    },
+                    "finishRent": {
+                        "type": "date"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "updatedBy": {
+                        "type": "string"
+                    },
+                    "deletedBy": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "date"
+                    },
+                    "updatedAt": {
+                        "type": "date"
+                    }
+                }
+            },
+            "users": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "role_id": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "date"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    }
+                }
+            },
+            "role": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "users_roles": {
+                        "type": "string"
+                    }
+                }
+            }
         }
     },
     "security": [
@@ -1187,18 +1270,19 @@
                                     "status": 201,
                                     "message": "Data Berhasil Disimpan",
                                     "data": {
-                                        "id": "7a754cbe-4fe5-4eb3-a9d8-ebb538aaea14",
+                                        "id": "4516a12b-b1c6-4d55-ab9a-c3b2965d458f",
                                         "name": "Ferrari",
                                         "category": "small",
-                                        "price": "1000000",
-                                        "image": "https://res.cloudinary.com/dmuuypm2t/image/upload/v1716710860/challenge_5/1716710857937_blyLwyZe..png",
+                                        "price": 1000000,
+                                        "image": "https://res.cloudinary.com/dmuuypm2t/image/upload/v1717247423/challenge_5/1717247419830_jTO0SHwp..png",
+                                        "onPublish": true,
                                         "startRent": null,
                                         "finishRent": "2012-04-04T17:00:00.000Z",
-                                        "createdBy": "admin",
-                                        "updatedBy": "admin",
+                                        "createdBy": "rizki",
+                                        "updatedBy": "rizki",
                                         "deletedBy": null,
-                                        "createdAt": "2024-05-26T08:07:40.683Z",
-                                        "updatedAt": "2024-05-26T08:07:40.683Z"
+                                        "createdAt": "2024-06-01T13:10:25.007Z",
+                                        "updatedAt": "2024-06-01T13:10:25.007Z"
                                     }
                                 }
                             }
@@ -1306,18 +1390,19 @@
                                         "status": 200,
                                         "message": "Get car data by ID successfully",
                                         "data": {
-                                            "id": "07cee5eb-0e11-4aaf-9406-f5e657cd8c91",
-                                            "name": "Nissan Altima",
+                                            "id": "4516a12b-b1c6-4d55-ab9a-c3b2965d458f",
+                                            "name": "Bmw",
                                             "category": "Medium",
-                                            "price": 10000,
-                                            "image": "https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png",
-                                            "startRent": null,
-                                            "finishRent": null,
-                                            "createdBy": "admin",
-                                            "updatedBy": "admin",
-                                            "deletedBy": null,
-                                            "createdAt": "2024-05-25T12:26:24.349Z",
-                                            "updatedAt": "2024-05-25T12:26:24.349Z"
+                                            "price": 500000,
+                                            "image": "https://res.cloudinary.com/dmuuypm2t/image/upload/v1717247864/challenge_5/1717247861177_SjbJwGx7..png",
+                                            "onPublish": false,
+                                            "startRent": "2015-04-04T17:00:00.000Z",
+                                            "finishRent": "2015-05-04T17:00:00.000Z",
+                                            "createdBy": "rizki",
+                                            "updatedBy": "firman",
+                                            "deletedBy": "firman",
+                                            "createdAt": "2024-06-01T13:10:25.007Z",
+                                            "updatedAt": "2024-06-01T13:18:19.096Z"
                                         }
                                     }
                                 }
@@ -1386,7 +1471,7 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/x-www-form-urlencoded": {
+                        "multipart/form-data": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
@@ -1427,20 +1512,21 @@
                                 "example": {
                                     "value": {
                                         "status": 200,
-                                        "message": "Get car data by ID successfully",
+                                        "message": "Car updated successfully",
                                         "data": {
-                                            "id": "07cee5eb-0e11-4aaf-9406-f5e657cd8c91",
-                                            "name": "Nissan Altima",
+                                            "id": "4516a12b-b1c6-4d55-ab9a-c3b2965d458f",
+                                            "name": "Bmw",
                                             "category": "Medium",
-                                            "price": 10000,
-                                            "image": "https://res.cloudinary.com/dmuuypm2t/image/upload/v1710400118/img_car_lhk3me.png",
+                                            "price": 500000,
+                                            "image": "https://res.cloudinary.com/dmuuypm2t/image/upload/v1717247864/challenge_5/1717247861177_SjbJwGx7..png",
+                                            "onPublish": false,
                                             "startRent": null,
-                                            "finishRent": null,
-                                            "createdBy": "admin",
-                                            "updatedBy": "admin",
+                                            "finishRent": "2015-04-04T17:00:00.000Z",
+                                            "createdBy": "rizki",
+                                            "updatedBy": "firman",
                                             "deletedBy": null,
-                                            "createdAt": "2024-05-25T12:26:24.349Z",
-                                            "updatedAt": "2024-05-25T12:26:24.349Z"
+                                            "createdAt": "2024-06-01T13:10:25.007Z",
+                                            "updatedAt": "2024-06-01T13:17:45.496Z"
                                         }
                                     }
                                 }
@@ -1853,122 +1939,6 @@
                         "BearerAuth": []
                     }
                 ]
-            }
-        }
-    },
-    "components": {
-        "securitySchemes": {
-            "TodolistAuth": {
-                "description": "Authentication for Todolist RESTful API",
-                "type": "apiKey",
-                "in": "header",
-                "name": "X-API-Key"
-            }
-        },
-        "parameters": {
-            "TodolistId": {
-                "name": "todolistId",
-                "in": "path",
-                "required": true,
-                "description": "Todolist id for updated",
-                "schema": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 100
-                },
-                "examples": {
-                    "java": {
-                        "description": "Sample todolist id for Java",
-                        "value": "1"
-                    },
-                    "php": {
-                        "description": "Sample todolist id for PHP",
-                        "value": "2"
-                    }
-                }
-            }
-        },
-        "schemas": {
-            "cars": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "category": {
-                        "type": "string"
-                    },
-                    "price": {
-                        "type": "number"
-                    },
-                    "image": {
-                        "type": "string"
-                    },
-                    "onPublish": {
-                        "type": "boolean"
-                    },
-                    "starRent": {
-                        "type": "date"
-                    },
-                    "finishRent": {
-                        "type": "date"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
-                    "updatedBy": {
-                        "type": "string"
-                    },
-                    "deletedBy": {
-                        "type": "string"
-                    },
-                    "createdAt": {
-                        "type": "date"
-                    },
-                    "updatedAt": {
-                        "type": "date"
-                    }
-                }
-            },
-            "Users": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "username": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "password": {
-                        "type": "string"
-                    },
-                    "role_id": {
-                        "type": "string"
-                    },
-                    "createdAt": {
-                        "type": "date"
-                    },
-                    "updatedAt": {
-                        "type": "string"
-                    }
-                }
-            },
-            "role": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "users_roles": {
-                        "type": "string"
-                    }
-                }
             }
         }
     }
